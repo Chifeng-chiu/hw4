@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <title>專業投資筆記系統 5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 </head>
+
 <body class="bg-[#0b0e14] text-gray-200 p-4 md:p-8">
-    
+
     <div id="auth-overlay" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
         <div class="bg-[#161b22] p-8 rounded-2xl border border-gray-700 w-full max-w-md shadow-2xl">
             <h2 class="text-2xl font-bold mb-6 text-blue-400 text-center">🔐 登入專業投資系統</h2>
             <div class="space-y-4">
-                <input type="text" id="user-input" placeholder="帳號" class="w-full bg-gray-800 p-3 rounded outline-none border border-transparent focus:border-blue-500 transition">
-                <input type="password" id="pass-input" placeholder="密碼" class="w-full bg-gray-800 p-3 rounded outline-none border border-transparent focus:border-blue-500 transition">
+                <input type="text" id="user-input" placeholder="帳號"
+                    class="w-full bg-gray-800 p-3 rounded outline-none border border-transparent focus:border-blue-500 transition">
+                <input type="password" id="pass-input" placeholder="密碼"
+                    class="w-full bg-gray-800 p-3 rounded outline-none border border-transparent focus:border-blue-500 transition">
+                <div class="flex items-center mt-2 mb-4">
+                    <input type="checkbox" id="remember-me"
+                        class="w-4 h-4 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500">
+                    <label for="remember-me" class="ml-2 text-sm text-gray-400">記住帳號與密碼</label>
+                </div>
                 <div class="flex gap-2">
-                    <button onclick="handleAuth('login')" class="flex-1 bg-blue-600 py-3 rounded font-bold hover:bg-blue-500 transition">登入</button>
-                    <button onclick="handleAuth('register')" class="flex-1 bg-gray-700 py-3 rounded font-bold hover:bg-gray-600 transition">註冊</button>
+                    <button onclick="handleAuth('login')"
+                        class="flex-1 bg-blue-600 py-3 rounded font-bold hover:bg-blue-500 transition">登入</button>
+                    <button onclick="handleAuth('register')"
+                        class="flex-1 bg-gray-700 py-3 rounded font-bold hover:bg-gray-600 transition">註冊</button>
                 </div>
                 <p id="auth-msg" class="text-center text-sm text-red-400 h-5"></p>
             </div>
@@ -47,12 +58,15 @@
             </div>
         </div>
 
-        <form id="add-form" class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-8 bg-[#161b22] p-4 rounded-xl border border-gray-700 shadow-xl">
-            <input type="text" id="symbol" placeholder="代碼 (例: 2330)" class="bg-gray-800 p-2 rounded outline-none border border-transparent focus:border-blue-500">
+        <form id="add-form"
+            class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-8 bg-[#161b22] p-4 rounded-xl border border-gray-700 shadow-xl">
+            <input type="text" id="symbol" placeholder="代碼 (例: 2330)"
+                class="bg-gray-800 p-2 rounded outline-none border border-transparent focus:border-blue-500">
             <input type="number" id="shares" placeholder="股數" class="bg-gray-800 p-2 rounded outline-none">
             <input type="number" step="0.1" id="cost" placeholder="成本" class="bg-gray-800 p-2 rounded outline-none">
             <input type="text" id="notes" placeholder="筆記: 為何買這支？" class="bg-gray-800 p-2 rounded outline-none">
-            <button type="submit" class="bg-blue-600 px-6 py-2 rounded font-bold hover:bg-blue-500 transition">新增紀錄</button>
+            <button type="submit"
+                class="bg-blue-600 px-6 py-2 rounded font-bold hover:bg-blue-500 transition">新增紀錄</button>
         </form>
 
         <div id="chart-container" class="mb-8 bg-[#161b22] p-4 rounded-xl border border-gray-700 hidden shadow-2xl">
@@ -79,25 +93,53 @@
     <script>
         let chart; let candleSeries; let loggedInUser = "";
 
+        // 頁面載入時讀取儲存的帳號密碼
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('saved_username');
+            const savedPass = localStorage.getItem('saved_password');
+            if (savedUser && savedPass) {
+                document.getElementById('user-input').value = savedUser;
+                document.getElementById('pass-input').value = savedPass;
+                document.getElementById('remember-me').checked = true;
+            } else {
+                // 預設帳號密碼
+                document.getElementById('user-input').value = '12345';
+                document.getElementById('pass-input').value = '1234';
+            }
+        });
+
         // 身分驗證處理
         async function handleAuth(type) {
             const user = document.getElementById('user-input').value;
             const pass = document.getElementById('pass-input').value;
+            const rememberMe = document.getElementById('remember-me').checked;
             const formData = new FormData();
             formData.append('username', user);
             formData.append('password', pass);
 
             const res = await fetch(`/api/${type}`, { method: 'POST', body: formData });
             const data = await res.json();
-            
-            if(res.ok) {
-                if(type === 'register') {
+
+            if (res.ok) {
+                if (type === 'register') {
                     document.getElementById('auth-msg').className = 'text-center text-sm text-green-400 h-5';
                     document.getElementById('auth-msg').innerText = "註冊成功，請點擊登入";
                     return;
                 }
                 document.getElementById('auth-msg').innerText = "";
                 loggedInUser = user;
+
+                // 處理記住帳號密碼
+                if (type === 'login') {
+                    if (rememberMe) {
+                        localStorage.setItem('saved_username', user);
+                        localStorage.setItem('saved_password', pass);
+                    } else {
+                        localStorage.removeItem('saved_username');
+                        localStorage.removeItem('saved_password');
+                    }
+                }
+
                 document.getElementById('auth-overlay').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('blur-md');
                 document.getElementById('welcome-text').innerText = `你好，${user}。這是你的專屬投資日誌。`;
@@ -108,9 +150,9 @@
             }
         }
 
-        async function logout() { 
+        async function logout() {
             await fetch('/api/logout', { method: 'POST' });
-            location.reload(); 
+            location.reload();
         }
 
         async function checkAuthStatus() {
@@ -128,7 +170,7 @@
                 console.error("Auth check failed:", e);
             }
         }
-        
+
         checkAuthStatus();
 
         // 圖表邏輯
@@ -139,10 +181,10 @@
                 grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
                 width: chartElement.offsetWidth, height: 400,
             });
-            candleSeries = chart.addCandlestickSeries({ 
-                upColor: '#ef4444', downColor: '#22c55e', 
-                borderUpColor: '#ef4444', borderDownColor: '#22c55e', 
-                wickUpColor: '#ef4444', wickDownColor: '#22c55e' 
+            candleSeries = chart.addCandlestickSeries({
+                upColor: '#ef4444', downColor: '#22c55e',
+                borderUpColor: '#ef4444', borderDownColor: '#22c55e',
+                wickUpColor: '#ef4444', wickDownColor: '#22c55e'
             });
             window.addEventListener('resize', () => chart.applyOptions({ width: chartElement.offsetWidth }));
         }
@@ -163,7 +205,7 @@
             if (!loggedInUser) return;
             const res = await fetch('/api/portfolio');
             const data = await res.json();
-            
+
             // 更新看板
             document.getElementById('total-value').innerText = `$${data.summary.total_value.toLocaleString()}`;
             document.getElementById('total-profit').innerText = `$${data.summary.total_profit.toLocaleString()}`;
@@ -194,7 +236,7 @@
         }
 
         async function deleteStock(symbol) {
-            if(!confirm(`確定要刪除 ${symbol} 嗎？`)) return;
+            if (!confirm(`確定要刪除 ${symbol} 嗎？`)) return;
             const formData = new FormData(); formData.append('symbol', symbol);
             await fetch('/api/delete', { method: 'POST', body: formData });
             refreshData();
@@ -214,4 +256,5 @@
         setInterval(refreshData, 60000); // 每分鐘自動刷新
     </script>
 </body>
+
 </html>
