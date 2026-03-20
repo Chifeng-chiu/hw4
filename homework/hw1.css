@@ -1,0 +1,83 @@
+body {
+    background-color: #f0f2f5;
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+.form-card {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+h1 {
+    color: #1a73e8; /* 科技藍 */
+    font-size: 24px;
+    text-align: center;
+}
+
+.desc {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+/* 讓選項點起來更輕鬆 */
+.radio-group label, .check-group label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/* 框框樣式 */
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+    border-color: #1a73e8;
+    outline: none;
+}
+
+/* 按鈕樣式 */
+.submit-btn {
+    width: 100%;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #1557b0;
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}

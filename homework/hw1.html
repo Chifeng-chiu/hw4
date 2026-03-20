@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>綜合調查表單</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="form-card">
+        <h1>🔍 綜合生活調查問卷</h1>
+        <p class="desc">請根據你的直覺填寫以下內容</p>
+
+        <form action="#" method="POST">
+            
+            <div class="section">
+                <label class="label" for="username">1. 你的暱稱是？ (簡答)</label>
+                <input type="text" id="username" name="username" placeholder="請輸入..." required>
+            </div>
+
+            <div class="section">
+                <p class="label">2. 你平時最喜歡的休閒活動是？ (單選)</p>
+                <div class="radio-group">
+                    <label><input type="radio" name="hobby" value="game"> 打電動</label>
+                    <label><input type="radio" name="hobby" value="sports"> 健身運動</label>
+                    <label><input type="radio" name="hobby" value="sleep"> 睡覺</label>
+                    <label><input type="radio" name="hobby" value="read"> 看書</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <p class="label">3. 關於期末考，你通常會準備什麼？ (多選)</p>
+                <div class="check-group">
+                    <label><input type="checkbox" name="prep" value="coffee"> 咖啡/提神飲料</label>
+                    <label><input type="checkbox" name="prep" value="notes"> 別人的筆記</label>
+                    <label><input type="checkbox" name="prep" value="god"> 虔誠的祈禱</label>
+                    <label><input type="checkbox" name="prep" value="allnight"> 熬夜的決心</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <label class="label" for="mood">4. 你現在的心情如何？</label>
+                <select id="mood" name="mood">
+                    <option value="happy">非常好，精神百倍</option>
+                    <option value="normal">還行，普通過日子</option>
+                    <option value="tired">有點累，想放假</option>
+                    <option value="sad">憂鬱中，別理我</option>
+                </select>
+            </div>
+
+            <div class="section">
+                <label class="label" for="future">5. 對於未來的一年，你有什麼具體的願望或計劃嗎？ (問答)</label>
+                <textarea id="future" name="future" rows="5" placeholder="請詳細說明您的想法..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">提交我的回答</button>
+        </form>
+    </div>
+
+</body>
+</html>
