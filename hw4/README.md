@@ -237,21 +237,11 @@ manager.getAverageScore()  // → 81.6
 
 ## 使用方式
 
-### 安裝依賴
-```bash
-npm install
-```
-
-### 執行所有題目
-```bash
-node hw4/1.js
-node hw4/2.js
-# ...以此類推
-```
-
 ### 執行單一題目
 ```bash
-node hw4/1.js
+node 1.js
+node 2.js
+# ...以此類推
 ```
 
 ---
